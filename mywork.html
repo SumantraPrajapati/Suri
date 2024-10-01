@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading and Projects Page</title>
+    <style>
+        /* Global Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #000; /* Black background by default */
+            color: #FFFFFF; /* White text by default */
+        }
+
+        /* Loading Screen Styles */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000; /* Black background */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #00FF00; /* Green text */
+            z-index: 1000;
+        }
+
+        #loading-screen h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        #loading-messages {
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+            font-size: 1em;
+            line-height: 1.5em;
+            min-height: 150px; /* Reserve space for messages */
+        }
+
+        /* Projects Screen Styles */
+        #projects-screen {
+            display: none; /* Hidden initially */
+            padding: 20px;
+            background-color: #000; /* Black background */
+            color: #FFFFFF; /* White text */
+            min-height: 100vh;
+        }
+
+        #projects-screen h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #00FF00; /* Green heading */
+        }
+
+        #projects-list {
+            list-style-type: none;
+            padding: 0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        #projects-list li {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative; /* To manage image positioning */
+            margin-bottom: 30px;
+            padding: 15px;
+            border-radius: 5px;
+            transition: color 0.3s; /* Smooth transition for color change */
+            cursor: pointer; /* Change cursor to pointer on hover */
+        }
+
+        /* Change text color to green on hover */
+        #projects-list li:hover > .project-name {
+            color: #00FF00; /* Green text on hover */
+        }
+
+        /* Style for the project name */
+        .project-name {
+            transition: color 0.3s;
+            flex: 1; /* Allow the text to take up available space */
+        }
+
+        /* Style for the project image */
+        .project-image {
+            width: 300px; /* Adjust the width as needed */
+            height: auto;
+            border: 2px solid #00FF00; /* Green border */
+            border-radius: 5px;
+            margin-left: 20px; /* Space between text and image */
+            display: none; /* Hidden by default */
+            background-color: #fff; /* White background for better visibility */
+            object-fit: cover;
+            box-shadow: 0 4px 8px rgba(0, 255, 0, 0.5); /* Green shadow for depth */
+            transition: opacity 0.3s ease, display 0s linear 0.3s; /* Smooth fade-in effect */
+        }
+
+        /* Show the image when hovering over the li */
+        #projects-list li:hover > .project-image {
+            display: block;
+            opacity: 1;
+            transition-delay: 0s; /* Display immediately */
+        }
+
+        /* Hide the image when not hovering */
+        #projects-list li .project-image {
+            opacity: 0;
+        }
+
+        /* Typing Animation */
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #00FF00; }
+        }
+
+        .typing {
+            border-right: .15em solid #00FF00;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typing 2s steps(40, end), blink-caret .75s step-end infinite;
+        }
+
+        /* Responsive Design for Smaller Screens */
+        @media (max-width: 1000px) {
+            .project-image {
+                width: 200px; /* Smaller width on smaller screens */
+                margin-left: 15px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            #projects-list li {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .project-image {
+                width: 100%;
+                margin-left: 0;
+                margin-top: 10px; /* Space between text and image */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <h1>Loading...</h1>
+        <div id="loading-messages"></div>
+    </div>
+
+    <!-- Projects Screen -->
+    <div id="projects-screen">
+        <h2>My Projects</h2>
+        <ul id="projects-list">
+            <li>
+                <span class="project-name"><strong>Project 1:</strong> Candlestick pattern detector in C++</span>
+                <img src="chart.png" alt="Project 1 Image" class="project-image">
+            </li>
+            <!-- <li>
+                <span class="project-name"><strong>Project 2:</strong> Mobile Game Development</span>
+                <img src="images/project2.jpg" alt="Project 2 Image" class="project-image">
+            </li>
+            <li>
+                <span class="project-name"><strong>Project 3:</strong> Machine Learning Model</span>
+                <img src="images/project3.jpg" alt="Project 3 Image" class="project-image">
+            </li>
+            <li>
+                <span class="project-name"><strong>Project 4:</strong> Open Source Contribution</span>
+                <img src="images/project4.jpg" alt="Project 4 Image" class="project-image">
+            </li>
+            <li>
+                <span class="project-name"><strong>Project 5:</strong> IoT Home Automation</span>
+                <img src="images/project5.jpg" alt="Project 5 Image" class="project-image">
+            </li> -->
+        </ul>
+    </div>
+
+    <script>
+        // JavaScript to handle loading simulation and transition to projects
+
+        // Array of pre-processing steps to display
+        const loadingSteps = [
+            "Initializing system...",
+            "Checking dependencies...",
+            "Installing packages...",
+            "Configuring environment...",
+            "Finalizing setup..."
+        ];
+
+        let currentStep = 0;
+        const loadingMessages = document.getElementById('loading-messages');
+        const loadingScreen = document.getElementById('loading-screen');
+        const projectsScreen = document.getElementById('projects-screen');
+
+        // Function to display each loading step with a typing effect
+        function displayLoadingStep(step) {
+            return new Promise((resolve) => {
+                const message = document.createElement('div');
+                message.classList.add('typing');
+                loadingMessages.appendChild(message);
+
+                let index = 0;
+                const typingSpeed = 11; // milliseconds per character
+
+                const typingInterval = setInterval(() => {
+                    if (index < step.length) {
+                        message.textContent += step.charAt(index);
+                        index++;
+                    } else {
+                        clearInterval(typingInterval);
+                        // Add a brief pause before resolving
+                        setTimeout(resolve, 500);
+                    }
+                }, typingSpeed);
+            });
+        }
+
+        // Async function to handle the loading sequence
+        async function startLoading() {
+            for (let step of loadingSteps) {
+                await displayLoadingStep(step);
+            }
+
+            // After all steps are displayed, transition to projects screen
+            setTimeout(() => {
+                loadingScreen.style.transition = "opacity 1s ease";
+                loadingScreen.style.opacity = "0";
+                setTimeout(() => {
+                    loadingScreen.style.display = "none";
+                    projectsScreen.style.display = "block";
+                }, 1000); // Match with the CSS transition duration
+            }, 1000); // Wait 1 second before fading out
+        }
+
+        // Start the loading sequence once the page loads
+        window.onload = startLoading;
+    </script>
+</body>
+</html>
